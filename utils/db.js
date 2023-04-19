@@ -7,18 +7,17 @@ const url = `mongodb://${DB_HOST}:${DB_PORT}`;
 
 class DBClient {
   constructor() {
-    this.client = MongoClient.connect(url, (error, client) => {
-      if (error) {
-        console.log(error.message);
+    MongoClient.connect(url, (err, client) => {
+      if (!err) {
+        this.db = client.db(DB_DATABASE);
+      } else {
         this.db = false;
-        return;
       }
-      this.db = client.db(DB_DATABASE);
     });
   }
 
   isAlive() {
-    return this.db != null;
+    return !!this.db;
   }
 
   async nbUsers() {
@@ -31,4 +30,4 @@ class DBClient {
 }
 
 const dbClient = new DBClient();
-export default dbClient;
+module.exports = dbClient;
